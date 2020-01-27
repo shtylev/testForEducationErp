@@ -1,0 +1,82 @@
+﻿@using testForEducationErp.Models;
+@using Resources;
+@using PagedList.Mvc;
+@using System.Security.Claims;
+@model PagedList.IPagedList<Film>
+
+@{
+    ViewBag.Title = "Главная страница";
+}
+<br />
+
+@if (Request.IsAuthenticated)
+{
+    @Html.ActionLink("Добавить новый фильм", "Create", "Home")
+}
+
+<br /><br />
+@using (Html.BeginForm("Index", "Home", FormMethod.Post))
+{
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-md-2">@Resource.Title: </label>
+            <div class="col-md-10">
+                @Html.TextBox("filterTitle", "", htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">@Resource.YearReleaseStart: </label>
+            <div class="col-md-10">
+                @Html.TextBox("filterYearStart", DateTime.Now.AddYears(-3).Year, htmlAttributes: new { @class = "form-control", @style = "width: 100px" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">@Resource.YearReleaseEnd: </label>
+            <div class="col-md-10">
+                @Html.TextBox("filterYearEnd", DateTime.Now.Year, htmlAttributes: new { @class = "form-control", @style = "width: 100px" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">@Resource.Producer: </label>
+            <div class="col-md-10">
+                @Html.TextBox("filterProducer", "", htmlAttributes: new { @class = "form-control" })
+                <br />
+                <div class="form-inline">
+                    <input type="submit" value=@Resource.Filter class="btn btn-default" />
+                    @Html.ActionLink(Resource.Clear, "Index", "Home", htmlAttributes: new { @class = "btn btn-default" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<br />
+
+<table class="table table-bordered table-condensed">
+    <tr>
+        <th>@Resource.Title</th>
+        <th>@Resource.Description</th>
+        <th>@Resource.YearRelease</th>
+        <th>@Resource.Producer</th>
+        <th width="20px"></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Title</td>
+            <td>@Html.Raw(item.Description.Replace("\n", "<br />"))</td>
+            <td>@item.YearRelease</td>
+            <td>@item.Producer</td>
+            <td>
+                <a href="@Url.Action("Details", "Home", new { id = item.Id })" title="Информация"><span class="glyphicon glyphicon-info-sign"></span></a>
+                @if (item.User.UserName == User.Identity.Name)
+                {
+                    <a href="@Url.Action("Edit", "Home", new { id = item.Id })" title="Редактировать"><span class="glyphicon glyphicon-edit"></span></a>
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+<label class="control-label">Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount</label>
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))

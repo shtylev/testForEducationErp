@@ -1,0 +1,101 @@
+﻿@using testForEducationErp.Models;
+@model Film
+@{
+    ViewBag.Title = "Информация о фильме";
+}
+
+<h2>Информация о фильме "@Model.Title"</h2>
+
+<hr />
+
+@if (Model.User.UserName == User.Identity.Name)
+{
+    <p>@Html.ActionLink("Редактировать", "Edit", new { id = Model.Id })</p><br />
+}
+
+@if (Model.Poster != null)
+{
+    <div style="margin-right: 20px;float:left">
+        <img src="~/Images/@Model.Poster" width="200px" class="img-rounded" />
+    </div>
+}
+
+<table class="forTR" style="border-spacing: 2px">
+    <tr>
+        <td class="name">
+            @Html.DisplayNameFor(model => model.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Title)
+        </td>
+    </tr>
+    <tr>
+        <td class="name">
+            @Html.DisplayNameFor(model => model.YearRelease)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.YearRelease)
+        </td>
+    </tr>
+    <tr>
+        <td class="name">
+            @Html.DisplayNameFor(model => model.Producer)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Producer)
+        </td>
+    </tr>
+    <tr>
+        <td class="name">
+            @Html.DisplayNameFor(model => model.Description)
+        </td>
+        <td>
+            @Html.Raw(Model.Description.Replace("\n", "<br />"))
+        </td>
+    </tr>
+</table>
+
+<style>
+    .name {
+        width: 150px;
+        font-weight: bold
+    }
+
+    .forTR tr {
+        vertical-align: top
+    }
+</style>
+
+
+@*<div style="float:none">
+        <dl class="">
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.YearRelease)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.YearRelease)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Producer)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Producer)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd>
+                @Html.Raw(Model.Description.Replace("\n", "<br />"))
+            </dd>
+
+        </dl>
+    </div>*@
